@@ -1,4 +1,8 @@
 const gameContainer = document.getElementById("game");
+const card = document.querySelector(".card");
+let eventArray = [];
+let matchArray = [];
+let clickCount = 0;
 
 const COLORS = [
   "red",
@@ -12,6 +16,18 @@ const COLORS = [
   "orange",
   "purple"
 ];
+
+function removeListener (parent, func) {
+    for (let child of parent) {
+        child.removeEventListener("click", func);
+    }
+}
+
+function addListener (parent, func) {
+    for (let child of parent) {
+        child.addEventListener("click", func);
+    }
+}
 
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
@@ -59,9 +75,41 @@ function createDivsForColors(colorArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
-  // you can use event.target to see which element was clicked
-  console.log("you just clicked", event.target);
+    eventArray.push(event.target);
+    event.target.style.backgroundColor = event.target.classList;
+    event.target.removeEventListener("click", handleCardClick);
+    if (eventArray.length === 2) {
+        const gameDivs = document.querySelectorAll("#game div");
+        removeListener(gameDivs, handleCardClick);
+        setTimeout(function() {
+            if (eventArray[0].className === eventArray[1].className) {
+                console.log("MATCH");
+                matchArray.push(eventArray[0]);
+                matchArray.push(eventArray[1]);
+                eventArray = [];
+                addListener(gameDivs, handleCardClick);
+                for (let match of matchArray) {
+                    console.log(match);
+                    match.removeEventListener("click", handleCardClick);
+                }
+            } else {
+                console.log("no match");
+                eventArray[0].style.backgroundColor = "transparent";
+                eventArray[1].style.backgroundColor = "transparent";
+                addListener(gameDivs, handleCardClick);
+                for (let match of matchArray) {
+                    console.log(match);
+                    match.removeEventListener("click", handleCardClick);
+                }
+                eventArray = [];
+            }
+        }, 1000)
+    }
 }
+
+card.addEventListener("click", function() {
+    card.classList.toggle("is-flipped");
+})
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
