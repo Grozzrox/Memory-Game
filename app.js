@@ -107,9 +107,13 @@ function handleCardClick(event) {
     }
 }
 
-card.addEventListener("click", function() {
-    card.classList.toggle("is-flipped");
-})
-
 // when the DOM loads
 createDivsForColors(shuffledColors);
+
+// abstract logic to function...remove listener from match array
+// keep functions shorter than 30 lines
+// do not repeat logic
+// make functions for match and no match
+// name functions for what they do
+// only use let if value is expected to change
+// do not use comments when writing code for production
