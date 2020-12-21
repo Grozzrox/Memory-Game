@@ -1,4 +1,8 @@
+const startGame = document.querySelector("button");
 const gameContainer = document.getElementById("game");
+const clickDiv = document.querySelector("#counters h2 span");
+const highScoreDiv = document.querySelector("#counters h2:last-child span")
+const savedScore = localStorage.getItem('high score');
 let eventArray = [];
 let matchArray = [];
 let clickCount = 0;
@@ -16,6 +20,14 @@ const COLORS = [
   "purple"
 ];
 
+if (savedScore) {
+    highScoreDiv.innerText = savedScore;
+}
+
+startGame.addEventListener("click", function() {
+    window.location.reload();
+})
+
 function removeListener (parent, func) {
     for (const child of parent) {
         child.removeEventListener("click", func);
@@ -30,21 +42,14 @@ function addListener (parent, func) {
     removeListener(matchArray, handleCardClick);
 }
 
-// here is a helper function to shuffle an array
-// it returns the same array with values shuffled
-// it is based on an algorithm called Fisher Yates if you want ot research more
 function shuffle(array) {
   let counter = array.length;
 
-  // While there are elements in the array
   while (counter > 0) {
-    // Pick a random index
     let index = Math.floor(Math.random() * counter);
 
-    // Decrease counter by 1
     counter--;
 
-    // And swap the last element with it
     let temp = array[counter];
     array[counter] = array[index];
     array[index] = temp;
@@ -55,28 +60,23 @@ function shuffle(array) {
 
 let shuffledColors = shuffle(COLORS);
 
-// this function loops over the array of colors
-// it creates a new div and gives it a class with the value of the color
-// it also adds an event listener for a click for each card
 function createDivsForColors(colorArray) {
   for (let color of colorArray) {
-    // create a new div
+
     const newDiv = document.createElement("div");
 
-    // give it a class attribute for the value we are looping over
     newDiv.classList.add(color);
 
-    // call a function handleCardClick when a div is clicked on
     newDiv.addEventListener("click", handleCardClick);
 
-    // append the div to the element with an id of game
     gameContainer.append(newDiv);
   }
 }
 
-// TODO: Implement this function!
 function handleCardClick(event) {
     const gameDivs = document.querySelectorAll("#game div");
+    clickCount ++;
+    clickDiv.innerText = clickCount;
 
     eventArray.push(event.target);
     event.target.style.backgroundColor = event.target.classList;
@@ -89,7 +89,6 @@ function handleCardClick(event) {
     }
 }
 
-// when the DOM loads
 createDivsForColors(shuffledColors);
 
 function Match(object) {
@@ -116,15 +115,14 @@ function noMatch(object) {
 
 function checkWin(arr) {
     if (arr.length === 10) {
+        highScoreCheck();
         alert("GAME OVER");
     }
 }
 
-
-// abstract logic to function...remove listener from match array
-// keep functions shorter than 30 lines
-// do not repeat logic
-// make functions for match and no match
-// name functions for what they do
-// only use let if value is expected to change
-// do not use comments when writing code for production
+function highScoreCheck() {
+    if (highScoreDiv.innerText === "0" || parseInt(clickDiv.innerText) < parseInt(highScoreDiv.innerText)){
+        highScoreDiv.innerText = clickDiv.innerText;
+        localStorage.setItem('high score', highScoreDiv.innerText);
+    }
+}

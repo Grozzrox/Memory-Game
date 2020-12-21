@@ -1,12 +1,35 @@
 body {
+    color: white;
+    font-family: 'Lobster', cursive;
     text-align: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.171), rgb(0, 0, 0)), url(/Pictures/memory-background.jpeg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    z-index: 1;
+}
+
+button {
+    width: 10%;
+    height: 25px;
 }
 
 #game div {
-    border: 1px solid black;
+    border: 2px solid rgba(255, 255, 255, 0.788);
     width: 15%;
     height: 200px;
     margin: 10px;
     display: inline-block;
-    box-shadow:  0 8px 6px -6px black;
+    box-shadow: 5px 5px 20px rgba(124, 124, 124, 0.5);
+    z-index: 2;
+}
+
+#counters h2:last-child span {
+    color: red;
+}
+
+
+h2 {
+    display: inline-block;
+    width: 40%;
 }
