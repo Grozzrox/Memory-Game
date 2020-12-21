@@ -1,5 +1,4 @@
 const gameContainer = document.getElementById("game");
-const card = document.querySelector(".card");
 let eventArray = [];
 let matchArray = [];
 let clickCount = 0;
@@ -18,15 +17,17 @@ const COLORS = [
 ];
 
 function removeListener (parent, func) {
-    for (let child of parent) {
+    for (const child of parent) {
         child.removeEventListener("click", func);
     }
 }
 
 function addListener (parent, func) {
-    for (let child of parent) {
+    for (const child of parent) {
         child.addEventListener("click", func);
     }
+
+    removeListener(matchArray, handleCardClick);
 }
 
 // here is a helper function to shuffle an array
@@ -75,40 +76,50 @@ function createDivsForColors(colorArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
+    const gameDivs = document.querySelectorAll("#game div");
+
     eventArray.push(event.target);
     event.target.style.backgroundColor = event.target.classList;
     event.target.removeEventListener("click", handleCardClick);
-    if (eventArray.length === 2) {
-        const gameDivs = document.querySelectorAll("#game div");
-        removeListener(gameDivs, handleCardClick);
-        setTimeout(function() {
-            if (eventArray[0].className === eventArray[1].className) {
-                console.log("MATCH");
-                matchArray.push(eventArray[0]);
-                matchArray.push(eventArray[1]);
-                eventArray = [];
-                addListener(gameDivs, handleCardClick);
-                for (let match of matchArray) {
-                    console.log(match);
-                    match.removeEventListener("click", handleCardClick);
-                }
-            } else {
-                console.log("no match");
-                eventArray[0].style.backgroundColor = "transparent";
-                eventArray[1].style.backgroundColor = "transparent";
-                addListener(gameDivs, handleCardClick);
-                for (let match of matchArray) {
-                    console.log(match);
-                    match.removeEventListener("click", handleCardClick);
-                }
-                eventArray = [];
-            }
-        }, 1000)
+    if (eventArray.length === 2 && eventArray[0].className === eventArray[1].className) {
+        Match(gameDivs);
+        } 
+    else if (eventArray.length === 2 && eventArray[0].className !== eventArray[1].className) {
+        noMatch(gameDivs);
     }
 }
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
+
+function Match(object) {
+    removeListener(object, handleCardClick);
+    for (const event of eventArray) {
+        matchArray.push(event);
+    }
+    eventArray = [];
+    checkWin(matchArray);
+    addListener(object, handleCardClick);
+}
+
+function noMatch(object) {
+    removeListener(object, handleCardClick);
+    setTimeout(function() {
+        for (const event of eventArray) {
+            event.style.backgroundColor = 'transparent';
+        }
+        eventArray = [];
+
+        addListener(object, handleCardClick);
+    },1000);
+}
+
+function checkWin(arr) {
+    if (arr.length === 10) {
+        alert("GAME OVER");
+    }
+}
+
 
 // abstract logic to function...remove listener from match array
 // keep functions shorter than 30 lines
