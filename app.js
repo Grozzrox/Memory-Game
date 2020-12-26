@@ -10,13 +10,13 @@ let clickCount = 0;
 const COLORS = [
   "red",
   "blue",
+  "yellow",
   "green",
-  "orange",
   "purple",
   "red",
   "blue",
+  "yellow",
   "green",
-  "orange",
   "purple"
 ];
 
